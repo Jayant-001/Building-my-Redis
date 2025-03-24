@@ -25,7 +25,7 @@ redis.on('connect', () => {
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: "Jayant's redis-cli> ",
+    prompt: "redis-cli> ",
 });
 
 /**
