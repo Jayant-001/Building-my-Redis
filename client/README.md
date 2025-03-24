@@ -59,7 +59,7 @@ Commands are parsed and executed using the ioredis client.
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: "redis-cli> ",
+    prompt: "Jayant's redis-cli> ",
 });
 ```
 

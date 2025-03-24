@@ -1,103 +1,157 @@
-# My Redis Server
+# My Redis Implementation
 
-A lightweight Redis-compatible server implementation in Node.js.
+A lightweight Redis-like implementation with both server and client components, built with Node.js. This project includes a Redis-compatible server and an interactive CLI client.
 
-## Features
+## Project Structure
 
--   Basic Redis commands (SET, GET, DELETE, EXISTS, PING, FLUSHALL)
--   Key expiration support
--   Persistence through snapshots
--   RESP protocol implementation
+```
+my-redis/
+├── server/           # Redis server implementation
+├── client/           # Redis CLI client
+├── package.json
+└── README.md
+```
 
-## Installation
+## Quick Start
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/my-redis.git
+cd my-redis
+```
+
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-## Usage
+### Running the Server
 
 ```bash
-node server/index.js
+cd server
+node index.js
 ```
 
-The server will start on port 4000 by default.
+The Redis-compatible server will start on port 4000.
+
+### Running the Client
+
+```bash
+cd client
+node index.js
+```
+
+The interactive CLI will start and automatically connect to the server.
+
+## Components
+
+### 1. Redis Server (server/)
+
+A Redis-compatible server implementation that supports:
+
+-   Basic Redis commands (SET, GET, DELETE, etc.)
+-   Key expiration (TTL)
+-   Data persistence through snapshots
+-   RESP (Redis Serialization Protocol)
+-   In-memory data storage
+
+[Detailed Server Documentation](./server/README.md)
+
+### 2. Redis CLI (client/)
+
+An interactive command-line interface that:
+
+-   Connects to the Redis server
+-   Supports all implemented Redis commands
+-   Provides a user-friendly interface
+-   Includes error handling and connection management
+
+[Detailed Client Documentation](./client/README.md)
 
 ## Supported Commands
 
--   SET key value
--   GET key
--   DELETE key
--   EXISTS key
--   PING
--   FLUSHALL
--   EXPIRE key seconds
+| Command  | Description             |
+| -------- | ----------------------- |
+| SET      | Set key-value pair      |
+| GET      | Retrieve value by key   |
+| DELETE   | Remove key-value pair   |
+| EXISTS   | Check if key exists     |
+| EXPIRE   | Set key expiration time |
+| PING     | Test server connection  |
+| FLUSHALL | Clear all data          |
+
+## Example Usage
+
+```bash
+# Start the server in one terminal
+cd server && node index.js
+
+# Start the client in another terminal
+cd client && node index.js
+
+# In the client CLI:
+redis-cli> SET user:1 "John Doe"
+OK
+redis-cli> GET user:1
+"John Doe"
+redis-cli> EXISTS user:1
+1
+redis-cli> EXPIRE user:1 60
+OK
+```
+
+## Features
+
+-   **Server Features:**
+
+    -   In-memory data storage
+    -   Key expiration management
+    -   Data persistence
+    -   RESP protocol support
+    -   Connection management
+
+-   **Client Features:**
+    -   Interactive CLI
+    -   Command history
+    -   Error handling
+    -   Pretty-printed responses
+    -   Auto-reconnection
+
+## Technical Details
+
+-   **Server Port:** 4000 (default)
+-   **Protocol:** RESP (Redis Serialization Protocol)
+-   **Storage:** In-memory with JSON persistence
+-   **Language:** Node.js
+
+## Development
+
+This project is designed to be extensible. You can:
+
+-   Add new Redis commands
+-   Implement additional data structures
+-   Enhance persistence mechanisms
+-   Add clustering support
+
+For detailed implementation guides, check the respective README files in server/ and client/ directories.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Make your changes
+4. Submit a pull request
 
 ## License
 
 MIT
 
-Suggested Features
+## More Information
 
-1. Data Structures:
-
-    - Support for different data structures (e.g., strings, lists, sets, sorted sets, hashes).
-    - Implement commands for each data structure, similar to Redis.
-
-2. Persistence:
-
-    - Implement snapshotting or journaling to persist data periodically to disk.
-    - Allow loading data from a file on startup.
-
-3. Pub/Sub:
-
-    - Implement a publish/subscribe mechanism for real-time updates.
-
-4. Transactions:
-
-    - Support for transactions to execute multiple commands atomically.
-
-5. Expiration:
-
-    - Implement TTL (time-to-live) for keys to automatically delete them after a certain time.
-
-6. Replication:
-
-    - Implement a master-slave replication model for data redundancy.
-
-7. Clustering:
-
-    - Support sharding and clustering to distribute data across multiple instances.
-
-8. Monitoring:
-    - Implement monitoring tools to track performance metrics (e.g., memory usage, command execution time).
-
-Optimizations
-
-1. Data Storage:
-
-    - Use efficient data structures such as Maps or Sets for fast access.
-    - Consider implementing custom data structures for specific use cases.
-
-2. Serialization:
-
-    - Use efficient serialization methods (e.g., JSON, Protocol Buffers) for storing complex data types.
-
-3. Memory Management:
-
-    - Monitor memory usage and implement eviction policies (e.g., LRU, LFU) to manage memory effectively.
-
-4. Concurrency:
-
-    - Implement locks or use atomic operations to handle concurrent access safely.
-
-5. Caching:
-    - Use in-memory caching for frequently accessed data to reduce latency.
-
-Conclusion
-
-This foundation provides a starting point for building an extensible and well-structured in-memory database.
-As you develop the project, consider adding features and optimizations that would make your database more powerful and efficient.
-Make sure to document your code and design decisions to facilitate contributions from the open-source community.
-
-Good luck with your project!
+-   [Server Documentation](./server/README.md)
+-   [Client Documentation](./client/README.md)
+-   [Redis Protocol Specification](https://redis.io/topics/protocol)
