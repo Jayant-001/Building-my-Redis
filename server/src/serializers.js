@@ -1,19 +1,26 @@
+/**
+ * Handles Redis protocol serialization
+ */
 class Serializer {
     returnOk() {
-        return "+Ok\r\n";
+        return "+OK\r\n";
     }
 
     returnBulkString(result) {
-        if (!result) return `$-1\r\n`;
+        if (result === null || result === undefined) return "$-1\r\n";
         return `$${result.length}\r\n${result}\r\n`;
     }
 
     returnBoolean(value) {
-        return value ? "#t\r\n" : "#f\r\n";
+        return value ? ":1\r\n" : ":0\r\n";
     }
 
     returnPong() {
         return "+PONG\r\n";
+    }
+
+    returnError(message) {
+        return `-ERR ${message}\r\n`;
     }
 }
 

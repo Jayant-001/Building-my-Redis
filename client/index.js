@@ -1,39 +1,83 @@
 const Redis = require("ioredis");
 const readline = require("readline");
 
-// Create a Redis client
-const redis = new Redis(4000);
+// Configuration
+const CONFIG = {
+    port: 4000,
+    host: 'localhost',
+    retryStrategy: (times) => Math.min(times * 50, 2000)
+};
 
-// Setup readline for command line input
+/**
+ * Create Redis client with error handling
+ */
+const redis = new Redis(CONFIG);
+
+redis.on('error', (err) => {
+    console.error('Redis connection error:', err.message);
+});
+
+redis.on('connect', () => {
+    console.log('Connected to Redis server');
+});
+
+// Setup CLI interface
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: "jayant's redis-cli> ",
+    prompt: "Jayant's redis-cli> ",
 });
 
-rl.prompt();
-
+/**
+ * Execute Redis commands with error handling
+ * @param {string} command - Raw command string
+ */
 async function executeCommand(command) {
-
-    const args = command.split(' ');
-    const cmd = args.shift();
-
-    console.log("Executing command ", cmd, args)
     try {
-        const result = await redis[cmd](...args);
-        console.log(result);
+        const [cmd, ...args] = command.split(' ');
+        
+        if (!cmd) return;
+
+        // Validate command
+        if (!redis[cmd.toLowerCase()]) {
+            throw new Error(`Unknown command: ${cmd}`);
+        }
+
+        const result = await redis[cmd.toLowerCase()](...args);
+        
+        // Format output based on result type
+        if (result === null) {
+            console.log('(nil)');
+        } else if (Array.isArray(result)) {
+            result.forEach((item, i) => console.log(`${i + 1}) ${item}`));
+        } else {
+            console.log(result);
+        }
     } catch (err) {
         console.error('Error:', err.message);
     }
 }
 
+// Handle CLI input
 rl.on("line", async (line) => {
     const command = line.trim();
+    
+    if (command === 'quit' || command === 'exit') {
+        console.log('Goodbye!');
+        process.exit(0);
+    }
+    
     if (command) {
         await executeCommand(command);
     }
+    
     rl.prompt();
 }).on("close", () => {
-    console.log("Bye bye, See you again...");
+    console.log("\nClosing connection...");
+    redis.disconnect();
     process.exit(0);
 });
+
+// Start CLI
+console.log('Welcome to Redis CLI');
+rl.prompt();
